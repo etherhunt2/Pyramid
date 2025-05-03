@@ -1,84 +1,128 @@
-import React from 'react'
-import Image from 'next/image'
-import p1 from '../../../public/images/placeholder1.jpg'
-import p2 from '../../../public/images/placeholder2.jpg'
-import p3 from '../../../public/images/placeholder3.jpg'
+'use client';
+import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-type ServiceCardProps = {
-    title: string
-    description: string
-    imageSrc: string
-}
+const ServiceCard = ({ title, description, videoSrc, posterSrc, logoSrc, overlayText }: {
+  title: string;
+  description: string;
+  videoSrc: string;
+  posterSrc: string;
+  logoSrc: string;
+  overlayText: string;
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Effect to handle video play/pause on hover state change
+  useEffect(() => {
+    if (!videoRef.current) return;
+    
+    if (isHovered) {
+      videoRef.current.play().catch(err => {
+        console.log(`Error playing video: ${err}`);
+      });
+    } else {
+      videoRef.current.pause();
+    }
+  }, [isHovered]);
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ title, description, imageSrc }) => {
-    return (
-        <div className="group relative overflow-hidden rounded-lg bg-gray-800">
-            {/* Image */}
-            <div className="relative h-64 w-full overflow-hidden transition-all duration-500 group-hover:scale-110">
-                <div className="absolute inset-0 z-10 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
-                <Image
-                    src={imageSrc}
-                    alt={title}
-                    fill
-                    className="object-cover transition-all duration-500 group-hover:blur-sm"
-                />
-            </div>
+  return (
+    <div className="prod_cards mb-10 lg:mb-0">
+      <div className="title_wrap">
+        <Link href={`/${title.toLowerCase().replace(/\s+/g, '-')}`} className="head_wrap flex justify-between items-center">
+          <h4 className="text-[#adadaa] text-xl font-semibold leading-[120%] tracking-[0.0125rem] mb-4 sm:text-lg sm:mb-2">
+            {title}
+          </h4>
+          <Image
+            src="/images/ourwork-rightarrow.svg"
+            alt="Right arrow"
+            width={24}
+            height={24}
+          />
+        </Link>
+        <p className="text-[#9d9b95] text-xl font-normal leading-[120%] tracking-[0.01875rem] mb-8 sm:text-base sm:mb-6">
+          {description}
+        </p>
+      </div>
 
-            {/* Content */}
-            <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 transition-all duration-500">
-                <h3 className="mb-2 text-xl font-bold text-white">{title}</h3>
+      <div
+        className="prod_video h-[400px] overflow-hidden block relative rounded-lg border border-transparent sm:h-[315px]"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <video
+          ref={videoRef}
+          muted
+          loop
+          preload="none"
+          poster={posterSrc}
+          className="w-full h-[400px] object-cover rounded-lg sm:h-[315px]"
+          playsInline
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
 
-                {/* Description - hidden by default, shown on hover */}
-                <div className="h-0 opacity-0 overflow-hidden transition-all duration-500 group-hover:h-auto group-hover:opacity-100">
-                    <p className="text-gray-200">{description}</p>
-                </div>
-            </div>
+        <div
+          style={{ display: isHovered ? 'block' : 'none' }}
+          className="floating_contents rounded-lg opacity-95 bg-[#150620] absolute bottom-0 h-[400px] w-full px-8 py-14 lg:py-6 md:py-12 sm:h-[315px] sm:py-10 sm:px-4 z-0"
+        >
+          <Image
+            className="logo mb-10 relative z-2 lg:mb-6"
+            src={logoSrc}
+            alt={`${title} logo`}
+            width={150}
+            height={40}
+          />
+          <p className="text-[#9d9b95] text-lg font-normal leading-[120%] tracking-[0.01688rem] m-0 pretty-text sm:text-base">
+            {overlayText}
+          </p>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
 const ServicesSection: React.FC = () => {
-    const services = [
-        {
-            title: "Pyramid Talent",
-            description: "Strategic workforce solutions to meet your hiring and talent needs. Lorem Ipsum",
-            imageSrc: p1 // Replace with actual image in production
-        },
-        {
-            title: "Career",
-            description: "Training, career acceleration, and expert development programs.",
-            imageSrc: p2 // Replace with actual image in production
-        },
-        {
-            title: "Consulting",
-            description: "Expert insights and solutions for your business challenges.",
-            imageSrc: p3 // Replace with actual image in production
-        }
-    ]
+  const services = [
+    {
+      title: "Pyramid Talent",
+      description: "Fast access to top talent, anywhere.",
+      videoSrc: "https://pyramidci.com/wp-content/uploads/2024/04/1.mp4",
+      posterSrc: "https://pyramidci.com/wp-content/uploads/2025/03/p-1-67d909d61dfff.webp",
+      logoSrc: "https://pyramidci.com/wp-content/uploads/2024/07/talent.svg",
+      overlayText: "With Pyramid Talent, you gain more than talent placement. You get a dedicated partner offering market-driven, customized solutions. Our global network ensures access to elite IT, engineering, and professional talent, backed by a culture of inclusion and continuous adaptation to your needs."
+    },
+    {
+      title: "Celsior",
+      description: "Innovate. Accelerate. Elevate.",
+      videoSrc: "https://pyramidci.com/wp-content/uploads/2024/04/3.mp4",
+      posterSrc: "https://pyramidci.com/wp-content/uploads/2025/03/p-3-67d909d472732.webp",
+      logoSrc: "https://pyramidci.com/wp-content/uploads/2024/07/celsior.svg",
+      overlayText: "With Celsior, you get ongoing innovation tailored to your changing technology requirements. Our tailored solutions across Data & AI, Digital Solutions, and Automation & Platforms enhance customer experiences, boost agility, and ensure fast market entry to drive long-term success."
+    },
+    {
+      title: "GenSpark",
+      description: "Empower today, excel tomorrow.",
+      videoSrc: "https://pyramidci.com/wp-content/uploads/2024/04/2.mp4",
+      posterSrc: "https://pyramidci.com/wp-content/uploads/2025/03/p-2-67d909d401914.webp",
+      logoSrc: "https://pyramidci.com/wp-content/uploads/2024/07/genspark.svg",
+      overlayText: "With GenSpark, you can bridge the widening global skills gap and elevate your workforce. Our custom training programs are tailored to your organization's unique needs for dynamic market adaptation and empower your teams to boost workforce capabilities, productivity, and resilience."
+    }
+  ];
 
-    return (
-        <section className="py-20 bg-gray-900 text-white">
-            <div className="container mx-auto px-4">
-                <div className="mb-12 text-center">
-                    <h2 className="text-3xl font-bold mb-4">Our Services</h2>
-                    <p className="max-w-2xl mx-auto text-gray-400">
-                        We provide comprehensive solutions designed to help your business grow and succeed in today's competitive market.
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {services.map((service, index) => (
-                        <ServiceCard
-                            key={index}
-                            title={service.title}
-                            description={service.description}
-                            imageSrc={service.imageSrc.src}
-                        />
-                    ))}
-                </div>
+  return (
+    <section className="products__wrapper bg-[#1c1c1c] pb-[100px] sm:pb-5">
+      <div className="container mx-auto px-4">
+        <div className="row br pt-10 border-t border-[#343434] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service, index) => (
+            <div key={index} className="col-12 col-md-6 col-lg-4">
+              <ServiceCard {...service} />
             </div>
-        </section>
-    )
-}
-
-export default ServicesSection 
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+export default ServicesSection;

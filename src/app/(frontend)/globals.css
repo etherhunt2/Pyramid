@@ -110,3 +110,40 @@ html[data-theme='light'] {
 .animate-marquee {
   animation: marquee 30s linear infinite;
 }
+
+/* Pattern Animation */
+.items_img {
+  transform: translateX(-40px);
+  opacity: 0;
+  transition: all 0.7s ease-in-out;
+}
+
+.items_img.imgShow {
+  opacity: 1 !important;
+  transform: translateX(0);
+}
+
+/* Footer styles */
+.footer-wrapper .top-wrapper .logos-wrapper .logos-bottom-wrapper li a img {
+  margin: 0;
+}
+
+.footer-wrapper .top-wrapper .logos-wrapper .logos-bottom-wrapper li a .white-logo {
+  display: none;
+}
+
+.home-sub-footer-wrapper .main-sub-footer-wrapper .home-sub-footer-logos li a img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.home-sub-footer-wrapper .main-sub-footer-wrapper .home-sub-footer-logos li a .hover {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .home-sub-footer-wrapper .main-sub-footer-wrapper .mobile-view {
+    display: none;
+  }
+}

@@ -1,159 +1,114 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { getPayload } from 'payload'
-import configPromise from '@payload-config'
-
+'use client';
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 type NewsEvent = {
-    id: string
-    title: string
-    publishedAt: string
-    eventType: 'news' | 'event'
-    slug: string
-    hero?: {
-        media?: {
-            url: string
-            alt: string
-        }
-    }
+  id: string;
+  title: string;
+  type: 'news';
+  description: string;
+  slug: string;
+  imageSrc: string;
 }
-
 const NewsEventCard: React.FC<{ item: NewsEvent }> = ({ item }) => {
-    const { title, publishedAt, eventType, slug, hero } = item
-    const formattedDate = new Date(publishedAt).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-    })
+  const { title, type, description, slug, imageSrc } = item;
+  return (
+    <div className="event-cards">
+      <div className="event-top">
+        <div className="top-content">
+          <div className="top-heading flex justify-between items-center">
+            <h6 className="text-[#9d9b95] text-sm uppercase">{type}</h6>
+            <Link href={`/news/${slug}`}>
+              <Image
+                src="/images/explore.svg"
+                alt="View more"
+                width={24}
+                height={24}
+              />
+            </Link>
+          </div>
+          <h5 className="text-[#ddddda] text-xl font-semibold my-4">{title}</h5>
+        </div>
+        <div className="bottom-content">
+          <p className="text-[#c8c6c2] text-lg font-normal leading-[140%] tracking-[0.27px] mb-0">
+            {description}
+          </p>
+          <Link href={`/news/${slug}`} className="btn_know relative inline-block -bottom-9">
+            <span className="inline-block pr-10 text-[#fefcf4] text-xl font-medium leading-[120%] tracking-[-0.2px]">
+              Learn More
+            </span>
+          </Link>
+        </div>
+      </div>
+      <div className="event-bottom">
+        <Image
+          src={imageSrc}
+          alt={title}
+          width={300}
+          height={300}
+        />
+      </div>
+    </div>
+  );
+};
 
-    return (
-        <Link href={`/news-events/${slug}`} className="block group">
-            <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-5px]">
-                {/* Image */}
-                <div className="relative h-48 w-full">
-                    {hero?.media?.url ? (
-                        <Image
-                            src={hero.media.url}
-                            alt={hero.media.alt || title}
-                            fill
-                            className="object-cover"
-                        />
-                    ) : (
-                        <div className="w-full h-full bg-purple-800 flex items-center justify-center text-white">
-                            {eventType === 'news' ? 'News' : 'Event'}
-                        </div>
-                    )}
-                    <div className="absolute top-4 left-4 bg-purple-600 text-white text-xs px-2 py-1 rounded uppercase">
-                        {eventType}
-                    </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                    <p className="text-gray-400 text-sm mb-2">{formattedDate}</p>
-                    <h3 className="text-lg font-semibold text-white mb-3 transition-colors duration-300 group-hover:text-purple-400">
-                        {title}
-                    </h3>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-purple-400 flex items-center">
-                            Read more
-                            <svg
-                                className="ml-1 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </Link>
-    )
-}
-
-async function getNewsEvents(): Promise<NewsEvent[]> {
-    try {
-        const payload = await getPayload({ config: configPromise })
-
-        const result = await payload.find({
-            collection: 'newsEvents',
-            limit: 3,
-            sort: '-publishedAt',
-            where: {
-                _status: {
-                    equals: 'published',
-                },
-            },
-        })
-
-        return result.docs as unknown as NewsEvent[]
-    } catch (error) {
-        console.error('Error fetching news & events:', error)
-        return []
+const NewsEventsSection = () => {
+  const newsEvents: NewsEvent[] = [
+    {
+      id: '1',
+      title: "SBTi Validates Pyramid Consulting's Near-term Science-based Targets",
+      type: 'news',
+      description: "Driving sustainability forward with science-based targets.",
+      slug: "sbti-validates-pyramid-consultings-near-term-science-based-targets",
+      imageSrc: "/images/news-1.webp"
+    },
+    {
+      id: '2',
+      title: "Sanjeev Tirath Named to the 2025 Staffing 100 North America by Staffing Industry Analysts",
+      type: 'news',
+      description: "The list recognizes leaders whose impact and achievements drive the workforce solutions ecosystem.",
+      slug: "sanjeev-tirath-named-to-the-2025-staffing-100-north-america-by-staffing-industry-analysts",
+      imageSrc: "/images/news-2.webp"
+    },
+    {
+      id: '3',
+      title: "Pyramid Consulting, Inc. and Boomi Partner to Accelerate Data Integration and Digital Transformation",
+      type: 'news',
+      description: "This partnership ensures that our clients receive the most advanced and efficient solutions available in today's fast-evolving technological landscape.",
+      slug: "pyramid-consulting-inc-and-boomi-forge-strategic-partnership-to-accelerate-data-integration-and-digital-transformation-for-enterprises",
+      imageSrc: "/images/news-3.webp"
+    },
+    {
+      id: '4',
+      title: "GenSpark Trainees Shine in Microsoft Innovation Challenge Hackathon",
+      type: 'news',
+      description: "Our team of GenSpark trainees earned third place for their legal tech solution TUSK.",
+      slug: "genspark-trainees-shine-in-microsoft-innovation-challenge-hackathon",
+      imageSrc: "/images/news-4.webp"
     }
-}
+  ];
 
-const NewsEventsSection = async () => {
-    const newsEvents = await getNewsEvents()
+  return (
+    <section className="news-and-events-wrapper py-20 bg-[#1c1c1c]">
+      <div className="container mx-auto px-4">
+        <div className="news-head-wrapper flex justify-between items-center mb-10">
+          <h4 className="text-[#adadaa] text-2xl font-semibold">News & Events</h4>
+          <Link href="/resources" className="btn_all">
+            <span className="text-[#adadaa] text-lg">All Resources</span>
+          </Link>
+        </div>
 
-    // Fallback data if no real data is available
-    const fallbackData: NewsEvent[] = [
-        {
-            id: '1',
-            title: 'Pyramid Launches New AI Solution',
-            publishedAt: new Date().toISOString(),
-            eventType: 'news',
-            slug: 'pyramid-launches-new-ai-solution',
-        },
-        {
-            id: '2',
-            title: 'Webinar: Future of Work and Talent',
-            publishedAt: new Date().toISOString(),
-            eventType: 'event',
-            slug: 'webinar-future-of-work',
-        },
-        {
-            id: '3',
-            title: 'Partnership Announcement with Techcorp',
-            publishedAt: new Date().toISOString(),
-            eventType: 'news',
-            slug: 'partnership-techcorp',
-        }
-    ]
-
-    const data = newsEvents.length > 0 ? newsEvents : fallbackData
-
-    return (
-        <section className="py-20 bg-gray-800 text-white">
-            <div className="container mx-auto px-4">
-                <div className="flex justify-between items-center mb-12">
-                    <h2 className="text-3xl font-bold">News & Events</h2>
-                    <Link
-                        href="/news-events"
-                        className="text-purple-400 hover:text-purple-300 flex items-center transition-colors duration-300"
-                    >
-                        All News & Events
-                        <svg
-                            className="ml-1 w-4 h-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </Link>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {data.map((item) => (
-                        <NewsEventCard key={item.id} item={item} />
-                    ))}
-                </div>
-            </div>
-        </section>
-    )
-}
-
-export default NewsEventsSection 
+        <div className="events-wrapper">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {newsEvents.map((item) => (
+              <div key={item.id} className="col-12 col-md-6 col-lg-4 col-xl-3">
+                <NewsEventCard item={item} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+export default NewsEventsSection;

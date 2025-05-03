@@ -1,0 +1,15 @@
+/* Animation for the pattern image */
+.items_img {
+  transform: translateX(-40px);
+  transition: all 0.7s ease-in-out;
+}
+
+.items_img.imgShow {
+  opacity: 1 !important;
+  transform: translateX(0);
+}
+
+/* Counter text animation */
+.counterTxt {
+  display: inline-block;
+}
